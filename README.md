@@ -1,7 +1,8 @@
 # PhotoSort
 Sort Photo and Video files on a folder (or drive) by exif time tag
 
-Description: The software permits to sort images and video files by time tag contained in the files (mainly JPG,JPEG,MP4 and MOV Files). The software is an MFC dialog based application written in C/C++. Once the software has performed the sorting of files, it creates the following hierarchical folders like:
+
+Description: The software permits to sort images and video files by time tag contained in the files (mainly JPG,JPEG,MP4 and MOV Files). The software is an MFC dialog based application written in C/C++ under visual studio communnity 2019. Once the software has performed the sorting of files, it creates the following hierarchical folders like:
 
 [Your_output_folder_location]/[Year folder]/[Month folder]/[Source Folder Location]/[Your photos and video files list]
 
