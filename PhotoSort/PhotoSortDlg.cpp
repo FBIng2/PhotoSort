@@ -1162,7 +1162,7 @@ long GetTotalNumberOfFilesToTreat(CPhotoSortDlg* MainDlg, CString InputFolderStr
 			NbCount++;
 
 		swprintf_s(buffer, _T("%d"), NbCount);
-		strFiles = _T("COUNTING FILES ----> ");
+		strFiles = _T("STEP 1/5:COUNTING TOTAL NUMBER OF FILES ----> ");
 		strFiles.append(buffer);
 		MainDlg->pInformationCtrl->SetWindowTextW(strFiles.c_str());
 		Refresh();
@@ -1646,7 +1646,7 @@ static DWORD WINAPI ThreadProcessInformations(CPhotoSortDlg* MainDlg, CProgressC
 			else
 			{
 				MainDlg->CopyToUnsortedFolder(&MainDlg->ListOfFiles->at(i));
-				InfosProcess.Format(_T("Processing File %s --> UNSORTED FOLDER"), MainDlg->ListOfFiles->at(i).FileName.GetString());
+				InfosProcess.Format(_T("Step 4/5:Processing File %s --> UNSORTED FOLDER"), MainDlg->ListOfFiles->at(i).FileName.GetString());
 				MainDlg->pInformationCtrl->SetWindowTextW(InfosProcess.GetString());
 			}
 
@@ -2142,7 +2142,7 @@ void CPhotoSortDlg::ManageJPEGPhotos(FileDataClass* InputFileName)
 			//command.Format(_T("C:\\windows\\system32\\robocopy \"%s\" \"%s\" \"%s\""), InputFileName->SourceFolder.GetString(), tmppath.GetString(), InputFileName->FileName.GetString());
 			InputFileName->CompletePath.Format(_T("%s\\%s"), InputFileName->Path.GetString(), InputFileName->FileName.GetString());
 			
-			InfosProcess.Format(_T("Processing File %s --> The Time Tag has been found: %s %s"), InputFileName->FileName.GetString(), InputFileName->YearTag.GetString(), InputFileName->MonthTag.GetString());
+			InfosProcess.Format(_T("Step 4/5:Processing File %s --> The Time Tag has been found: %s %s"), InputFileName->FileName.GetString(), InputFileName->YearTag.GetString(), InputFileName->MonthTag.GetString());
 			if (pInformationCtrl->GetSafeHwnd() != NULL)
 			pInformationCtrl->SetWindowTextW(InfosProcess.GetString());
 		}
@@ -2179,7 +2179,7 @@ void CPhotoSortDlg::ManageMOVFile(FileDataClass* InputFileName)
 			//command.Format(_T("C:\\windows\\system32\\robocopy \"%s\" \"%s\" \"%s\""), InputFileName->SourceFolder.GetString(), tmppath.GetString(), InputFileName->FileName.GetString());
 			InputFileName->CompletePath.Format(_T("%s\\%s"), InputFileName->Path.GetString(), InputFileName->FileName.GetString());
 			
-			InfosProcess.Format(_T("Processing File %s --> The Time Tag has been found: %s %s"), InputFileName->FileName.GetString(), InputFileName->YearTag.GetString(), InputFileName->MonthTag.GetString());
+			InfosProcess.Format(_T("Step 4/5:Processing File %s --> The Time Tag has been found: %s %s"), InputFileName->FileName.GetString(), InputFileName->YearTag.GetString(), InputFileName->MonthTag.GetString());
 			if (pInformationCtrl->GetSafeHwnd() != NULL)
 			pInformationCtrl->SetWindowTextW(InfosProcess.GetString());
 		}
@@ -2215,7 +2215,7 @@ void CPhotoSortDlg::ManageMP4File(FileDataClass* InputFileName)
 			//command.Format(_T("C:\\windows\\system32\\robocopy \"%s\" \"%s\" \"%s\""), InputFileName->SourceFolder.GetString(), tmppath.GetString(), InputFileName->FileName.GetString());
 			InputFileName->CompletePath.Format(_T("%s\\%s"), InputFileName->Path.GetString(), InputFileName->FileName.GetString());
 			
-			InfosProcess.Format(_T("Processing File %s --> The Time Tag has been found: %s %s"), InputFileName->FileName.GetString(), InputFileName->YearTag.GetString(), InputFileName->MonthTag.GetString());
+			InfosProcess.Format(_T("Step 4/5:Processing File %s --> The Time Tag has been found: %s %s"), InputFileName->FileName.GetString(), InputFileName->YearTag.GetString(), InputFileName->MonthTag.GetString());
 			if (pInformationCtrl->GetSafeHwnd() != NULL)
 			pInformationCtrl->SetWindowTextW(InfosProcess.GetString());
 		}
@@ -2249,7 +2249,7 @@ void CPhotoSortDlg::ManageAVIFile(FileDataClass* InputFileName)
 			InputFileName->MonthTagForDate = DateFields[1];
 			InputFileName->DayTag = DateFields[2];
 			InputFileName->CompletePath.Format(_T("%s\\%s"), InputFileName->Path.GetString(), InputFileName->FileName.GetString());
-			InfosProcess.Format(_T("Processing File %s --> The Time Tag has been found: %s %s"), InputFileName->FileName.GetString(), InputFileName->YearTag.GetString(), InputFileName->MonthTag.GetString());
+			InfosProcess.Format(_T("Step 4/5:Processing File %s --> The Time Tag has been found: %s %s"), InputFileName->FileName.GetString(), InputFileName->YearTag.GetString(), InputFileName->MonthTag.GetString());
 			if (pInformationCtrl->GetSafeHwnd() != NULL)
 			pInformationCtrl->SetWindowTextW(InfosProcess.GetString());
 		}
@@ -2285,7 +2285,7 @@ void CPhotoSortDlg::ManagePNGFile(FileDataClass* InputFileName)
 			InputFileName->DayTag = DateFields[2];
 			InputFileName->CompletePath.Format(_T("%s\\%s"), InputFileName->Path.GetString(), InputFileName->FileName.GetString());
 
-			InfosProcess.Format(_T("Processing File %s --> The Time Tag has been found: %s %s"), InputFileName->FileName.GetString(), InputFileName->YearTag.GetString(), InputFileName->MonthTag.GetString());
+			InfosProcess.Format(_T("Step 4/5:Processing File %s --> The Time Tag has been found: %s %s"), InputFileName->FileName.GetString(), InputFileName->YearTag.GetString(), InputFileName->MonthTag.GetString());
 			if (pInformationCtrl->GetSafeHwnd() != NULL)
 			pInformationCtrl->SetWindowTextW(InfosProcess.GetString());
 		}
@@ -2316,7 +2316,7 @@ void CPhotoSortDlg::CopyToUnsortedFolder(FileDataClass* InputFileName)
 	windows_system(tmpdata);
 	delete[] tmpdata;
 	InputFileName->CompletePath.Format(_T("%s\\%s"), tmppath.GetString(), InputFileName->FileName.GetString());
-	InfosProcess.Format(_T("Processing File %s --> UNSORTED FOLDER"), InputFileName->FileName.GetString());
+	InfosProcess.Format(_T("Step 4/5:Processing File %s --> UNSORTED FOLDER"), InputFileName->FileName.GetString());
 	if (pInformationCtrl->GetSafeHwnd() != NULL)
 	pInformationCtrl->SetWindowTextW(InfosProcess.GetString());
 }
@@ -2335,8 +2335,6 @@ void CPhotoSortDlg::GetListOfFilesInInputFolder(CString InputPath, std::vector<C
 	CString mpercent;
 	CString tmpSupFolder;
 	DataString FileName;
-
-	
 
 	strtmp = "CREATING FILE LIST OF IMAGE AND MOVIE FILES FROM THE LIST OF FILES AND FOLDERS DETECTED";
 	pInformationCtrl->SetWindowTextW(strtmp.GetString());
@@ -2362,7 +2360,7 @@ void CPhotoSortDlg::GetListOfFilesInInputFolder(CString InputPath, std::vector<C
 		tmpsourcefolder = tmp.CompletePath.Left(Index);
 		tmp.SourceFolder = tmpsourcefolder;
 		tmp.SupFolder = tmpSupFolder;
-		strtmp.Format(_T("Scanning Files --> %s\r\n"), tmp.CompletePath.GetString());
+		strtmp.Format(_T("Step 2/5:Search Images and Video Files --> %s\r\n"), tmp.CompletePath.GetString());
 		pInformationCtrl->SetWindowTextW(strtmp.GetString());
 		if (tmp.FileName.Find('.') > 0)
 		{
@@ -2433,7 +2431,7 @@ void CPhotoSortDlg::RemoveDuplicateFilesInList()
 	double sizetotal;
 	CString TotalSizeStr;
 
-	strtmp = "REMOVE DUPLICATE FILES FROM LIST";
+	strtmp = "Step 3/5:REMOVE DUPLICATE FILES FROM LIST";
 	pInformationCtrl->SetWindowTextW(strtmp.GetString());
 	m_ProgressCtrl.SetRange32(0, (int)ListOfFiles->size());
 	for (int i = 0; i < (int)ListOfFiles->size(); i++)
@@ -2507,8 +2505,6 @@ void CPhotoSortDlg::ProcessPhotos()
 	TotalNbFiles = GetTotalNumberOfFilesToTreat(this, InputFolderPath);
 
 	m_ProgressCtrl.SetRange32(0, (int)TotalNbFiles);
-	strtmp.Format(_T("Total number of files in the input folder %s is %i"), InputFolderPath.GetString(), TotalNbFiles);
-	pInformationCtrl->SetWindowTextW(strtmp.GetString());
 
 	ListOfFiles->erase(ListOfFiles->begin(), ListOfFiles->end());
 	GetListOfFilesInInputFolder(InputFolderPath, &ImageFileExtensionList, &VideoFileExtensionList);
