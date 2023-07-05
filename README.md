@@ -13,6 +13,6 @@ depending on the time tag detected on the IMG files
 
 After completion of the sorting, the software performs the following task:
 
--> Verify that the copy of the files has been done properly: if there is a mismatch between the of files to be copied and the real number of files copied in the output folder, a log file indicates the names of the files which have not been copied
+-> Verify that the copy of the files has been done properly: if there is a mismatch between the list of files to be copied and the real number of files copied in the output folder, a log file indicates the names of the files which have not been copied
 
 -> generates html files that permits to see all the photos and videos in a photo gallery. Also, SlideShow photo gallery are generated with the possibility to modify the resfresh rate of the slideshow.
