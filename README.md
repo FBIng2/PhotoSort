@@ -2,11 +2,12 @@
 Sort Photo and Video files on a folder (or drive) by exif time tag
 
 
-Description: The software permits to sort images and video files by time tag contained in the files (mainly JPG,JPEG,MP4,AVI and MOV Files). The software is an MFC dialog based application written in C/C++ under visual studio communnity 2019. Once the software has performed the sorting of files, it creates the following hierarchical folders like:
+Description: The software permits to sort images and video files by time tag contained in the files (mainly JPG,JPEG,MP4,AVI and MOV Files). The software is an MFC dialog based application written in C/C++ under visual studio communnity 2019. 
 
 Note: Concerning the AVI Files, i have coded the functions to detect timestamps of canon files (but not fujifilm files). I have a old canon device (as old as 2006) that took AVI file (for video clip) and i have tested on the files and the software perform the sorting properly on my AVI files.
 But on FujiFilm files, I have not been able to test them.
 
+Once the software has performed the sorting of files, it creates the following hierarchical folders like:
 [Your_output_folder_location]/[Year folder]/[Month folder]/[Source Folder Location]/[Your photos and video files list]
 
 For instance, you can have the following folders created: D:\MyOutputFolderLocation\2023\01-January\IMG.JPG D:\MyOutputFolderLocation\2023\03-March\IMG2.JPG
