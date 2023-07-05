@@ -3,7 +3,7 @@ Sort Photo and Video files on a folder (or drive) by exif time tag
 
 
 Description: The software permits to sort images and video files by time tag contained in the files (mainly JPG,JPEG,MP4,AVI and MOV Files). 
-BMP files are also processed but they are sorted in the UNSORTED folder due to the fact that there is not time stamp contained in the bmp files.
+BMP files are also processed but they are sorted in the UNSORTED folder due to the fact that there is no time stamp contained in the bmp files (no exif data).
 The software is an MFC dialog based application written in C/C++ under visual studio communnity 2019. 
 
 Note: Concerning the AVI Files, i have coded the functions to detect timestamps of canon files (but not fujifilm files). I have a old canon device (as old as 2006) that took AVI file (for video clip) and i have tested on the files and the software perform the sorting properly on my AVI files.
