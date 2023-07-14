@@ -106,6 +106,7 @@ public:
 	long long TotalSize;
 
 	void OnAboutMenu();
+	void CallCopyDialog();
 
 
 	//FUNCTIONS

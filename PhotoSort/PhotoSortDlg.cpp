@@ -305,6 +305,8 @@ CString GetMonthString(CString InputMonth)
 
 
 
+
+
 void SortFinalResults(std::vector <FileResultClass>* InputVector)
 {
 	int i, j;
@@ -1472,7 +1474,7 @@ int CopyLightFileBinaryStream(FileDataClass  InputFileName)
 	CString tmpsrc;
 	tmpsrc.Format(_T("%s\\%s"), InputFileName.SourceFolder.GetString(), InputFileName.FileName.GetString());
 	CopyFile(tmpsrc.GetString(), InputFileName.CompletePath.GetString(), FALSE);
-	
+
 	NbThreadLightFiles--;
 	return 1;
 }
@@ -1526,7 +1528,7 @@ void ThreadManageLightFileCopy(std::vector<FileDataClass> *InputVector, CPhotoSo
 			double percent = (cptfiles / (double(MainDlg->ListOfFiles->size()))) * 100;
 			mpercent.Format(_T("%0.2f%%"), percent);
 			MainDlg->pStaticCtrl->SetWindowTextW(mpercent);
-			InfosProcess.Format(_T("PERFORM THE COPY --> FILE HAS BEEN COPIED TO %s"), MainDlg->ListOfFiles->at(i).CompletePath.GetString());
+			InfosProcess.Format(_T("Step 5/5:PERFORM THE COPY --> FILE HAS BEEN COPIED TO %s"), MainDlg->ListOfFiles->at(i).CompletePath.GetString());
 			MainDlg->pInformationCtrl->SetWindowTextW(InfosProcess.GetString());
 			MainDlg->m_ProgressCtrl.SetPos(cptfiles);
 			sizetotal = double(MainDlg->TotalSize) / 1e9;
@@ -1559,8 +1561,8 @@ void ThreadManageHeavyFileCopy(std::vector<FileDataClass>* InputVector, CPhotoSo
 		if (bContinue == FALSE)
 			return;
 		deltaThread = InputVector->size() - i;
-		if (deltaThread >= 4)
-			deltaThread = 4;
+		if (deltaThread >= 1)
+			deltaThread = 1;
 
 		NbThreadHeavyFiles = deltaThread;
 		for (int j = i; j < (int)i + deltaThread; j++)
@@ -1571,7 +1573,7 @@ void ThreadManageHeavyFileCopy(std::vector<FileDataClass>* InputVector, CPhotoSo
 			double percent = (cptfiles / (double(MainDlg->ListOfFiles->size()))) * 100;
 			mpercent.Format(_T("%0.2f%%"), percent);
 			MainDlg->pStaticCtrl->SetWindowTextW(mpercent);
-			InfosProcess.Format(_T("PERFORM THE COPY --> FILE HAS BEEN COPIED TO %s"), MainDlg->ListOfFiles->at(i).CompletePath.GetString());
+			InfosProcess.Format(_T("Step 5/5:PERFORM THE COPY --> FILE HAS BEEN COPIED TO %s"), MainDlg->ListOfFiles->at(i).CompletePath.GetString());
 			MainDlg->pInformationCtrl->SetWindowTextW(InfosProcess.GetString());
 			MainDlg->m_ProgressCtrl.SetPos(cptfiles);
 			sizetotal = double(MainDlg->TotalSize) / 1e9;
@@ -1685,40 +1687,24 @@ static DWORD WINAPI ThreadProcessInformations(CPhotoSortDlg* MainDlg, CProgressC
 
 	//PERFORM THE COPY
 	cptfiles = 0;
-	std::thread th1{ ThreadManageLightFileCopy,&LightFileList,MainDlg};
+	std::thread th1{ThreadManageLightFileCopy,&LightFileList,MainDlg};
 	std::thread th2{ ThreadManageHeavyFileCopy,&HeavyFileList,MainDlg};
 	th1.join();
 	th2.join();
 	CString mpercent;
-	//NbThread = 0;
-	/*CString mpercent;
-	
-	int CptTimeOut = 0;
-	int deltaThread;
-	for (i = 0; i < MainDlg->ListOfFiles->size(); i++)
-	{
-		CptTimeOut = 0;
-		if (bContinue == FALSE)
-			return 1;
-		deltaThread = MainDlg->ListOfFiles->size()-i;
-		if (deltaThread >= 4)
-			deltaThread = 4;
-		
-		NbThread = deltaThread;
-		std::thread th{ ThreadManageCopy,i,MainDlg};
-		th.join();
-		i = i + deltaThread - 1;
-		double percent = (i / (double(MainDlg->ListOfFiles->size()))) * 100;
-		mpercent.Format(_T("%0.2f%%"), percent);
-		MainDlg->pStaticCtrl->SetWindowTextW(mpercent);
-		InfosProcess.Format(_T("PERFORM THE COPY --> FILE HAS BEEN COPIED TO %s"), MainDlg->ListOfFiles->at(i).CompletePath.GetString());
-		MainDlg->pInformationCtrl->SetWindowTextW(InfosProcess.GetString());
-		m_ProgressCtrl->SetPos(i);
-		sizetotal = double(MainDlg->TotalSize) / 1e9;
-		TotalSizeStr.Format(_T("%0.02f Gb"), sizetotal);
-		MainDlg->pStaticSizeCtrl->SetWindowTextW(TotalSizeStr.GetString());
-	}*/
 
+	/*IFileOperation* pfo = InitializeCopyProcess();
+
+	for (int i=0;i<(int)1;i++)
+	{
+		std::wstring src(MainDlg->ListOfFiles->at(i).SourceFolder);
+		std::wstring dst(MainDlg->ListOfFiles->at(i).Path);
+		std::wstring filename(MainDlg->ListOfFiles->at(i).FileName);
+		AddFilesForCopy(pfo, &src, &dst, &filename);
+		//Sleep(200);
+	}
+	StartCopyProcess(pfo);*/
+	//CopyFilesWithProgressDialog(*MainDlg->ListOfFiles);
 
 	if (MainDlg->ListOfFiles->size() > 0)
 	{
@@ -2522,6 +2508,13 @@ void CPhotoSortDlg::OnClickedBrowsesourcebtn()
 
 	CWnd* pControl = GetDlgItem(IDC_InputEditCtrl);
 	pControl->SetWindowTextW(InputFolderPath);
+}
+
+void CPhotoSortDlg::CallCopyDialog()
+{
+
+
+	//CopyFilesWithDialog(const std::vector<std::wstring>&sourceFiles, const std::wstring & destinationFolder);
 }
 
 
