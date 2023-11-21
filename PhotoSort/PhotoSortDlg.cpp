@@ -20,6 +20,8 @@ std::atomic_int NbThreadHeavyFiles;
 CString FileProcessed;
 std::mutex mLock;
 
+#define FILE_MINIMUM_SIZE	30000
+
 static int CALLBACK BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM /*lParam*/, LPARAM lpData)
 {
 
@@ -1157,10 +1159,8 @@ long GetTotalNumberOfFilesToTreat(CPhotoSortDlg* MainDlg, CString InputFolderStr
 
 	for (auto const& dir_entry : fs::recursive_directory_iterator(InputFolderStr.GetString(), fs::directory_options::skip_permission_denied))
 	{
-
-		//FileName.SetString(dir_entry.path().c_str());
 		FileName = dir_entry.path();
-		if (FileName.find('.') > 0)
+		//if (FileName.find('.') > 0)
 			NbCount++;
 
 		swprintf_s(buffer, _T("%d"), NbCount);
@@ -2117,6 +2117,7 @@ void CPhotoSortDlg::ManageJPEGPhotos(FileDataClass* InputFileName)
 	{
 		if (_wtoi(DateFields[0]) > 0)
 		{
+			InputFileName->SupFolder.Remove(':');
 			InputFileName->Path = OutputFolderPath + "\\" + DateFields[0];
 			InputFileName->Path = InputFileName->Path + "\\" + GetMonthString(DateFields[1]) + "\\" + InputFileName->SupFolder;
 			std::filesystem::create_directories(InputFileName->Path.GetString());
@@ -2153,6 +2154,7 @@ void CPhotoSortDlg::ManageMOVFile(FileDataClass* InputFileName)
 	{
 		if (_wtoi(DateFields[0]) > 0)
 		{
+			InputFileName->SupFolder.Remove(':');
 			InputFileName->Path = OutputFolderPath + "\\" + DateFields[0];
 			InputFileName->Path = InputFileName->Path + "\\" + GetMonthString(DateFields[1]) + "\\" + InputFileName->SupFolder;
 			std::filesystem::create_directories(InputFileName->Path.GetString());
@@ -2190,6 +2192,7 @@ void CPhotoSortDlg::ManageMP4File(FileDataClass* InputFileName)
 	{
 		if (_wtoi(DateFields[0]) > 0)
 		{
+			InputFileName->SupFolder.Remove(':');
 			InputFileName->Path = OutputFolderPath + "\\" + DateFields[0];
 			InputFileName->Path = InputFileName->Path + "\\" + GetMonthString(DateFields[1]) + "\\" + InputFileName->SupFolder;
 			std::filesystem::create_directories(InputFileName->Path.GetString());
@@ -2226,6 +2229,7 @@ void CPhotoSortDlg::ManageAVIFile(FileDataClass* InputFileName)
 	{
 		if (_wtoi(DateFields[0]) > 0)
 		{
+			InputFileName->SupFolder.Remove(':');
 			InputFileName->Path = OutputFolderPath + "\\" + DateFields[0];
 			InputFileName->Path = InputFileName->Path + "\\" + GetMonthString(DateFields[1]) + "\\" + InputFileName->SupFolder;
 			std::filesystem::create_directories(InputFileName->Path.GetString());
@@ -2261,6 +2265,7 @@ void CPhotoSortDlg::ManagePNGFile(FileDataClass* InputFileName)
 	{
 		if (_wtoi(DateFields[0]) > 0)
 		{
+			InputFileName->SupFolder.Remove(':');
 			InputFileName->Path = OutputFolderPath + "\\" + DateFields[0];
 			InputFileName->Path = InputFileName->Path + "\\" + GetMonthString(DateFields[1]) + "\\" + InputFileName->SupFolder;
 			std::filesystem::create_directories(InputFileName->Path.GetString());
@@ -2292,6 +2297,7 @@ void CPhotoSortDlg::CopyToUnsortedFolder(FileDataClass* InputFileName)
 	char* tmpdata;
 	CString command;
 
+	InputFileName->SupFolder.Remove(':');
 	tmppath.Format(_T("%s\\UNSORTED\\%s"), OutputFolderPath.GetString(), InputFileName->SupFolder.GetString());
 
 	command.Format(_T("C:\\windows\\system32\\robocopy \"%s\" \"%s\" \"%s\""), InputFileName->SourceFolder.GetString(), tmppath.GetString(), InputFileName->FileName.GetString());
@@ -2336,6 +2342,7 @@ void CPhotoSortDlg::GetListOfFilesInInputFolder(CString InputPath, std::vector<C
 		}
 		tmp.FileName = "";
 		tmp.CompletePath = "";
+		
 		FileName.SetString(dir_entry.path().c_str());
 		tmp.CompletePath = FileName;
 		Index = tmp.CompletePath.ReverseFind('\\');
@@ -2346,19 +2353,19 @@ void CPhotoSortDlg::GetListOfFilesInInputFolder(CString InputPath, std::vector<C
 		tmpsourcefolder = tmp.CompletePath.Left(Index);
 		tmp.SourceFolder = tmpsourcefolder;
 		tmp.SupFolder = tmpSupFolder;
+		tmp.FileSize = dir_entry.file_size(); //GetFileSize(tmp.CompletePath);
 		strtmp.Format(_T("Step 2/5:Search Images and Video Files --> %s\r\n"), tmp.CompletePath.GetString());
 		pInformationCtrl->SetWindowTextW(strtmp.GetString());
-		if (tmp.FileName.Find('.') > 0)
+		if (tmp.FileSize > FILE_MINIMUM_SIZE) //on ne s'interesse qu'aux fichiers dont la taille minimum dépasse une limite minimum
 		{
-			Index = tmp.FileName.ReverseFind('.');
-			FileExtension = tmp.FileName.Mid(Index + 1);
-			FileExtension = ToUppercaseString(FileExtension);
-			tmp.FileExtension = FileExtension;
-			tmp.FileSize = GetFileSize(tmp.CompletePath);
-			Cond = 0;
-
-			if (tmp.FileSize > 100000) //on ne s'interesse qu'aux fichiers dont la taille minimum dépasse 100ko car en dessous de cette valeur les photos sont de toute facon de mauvaise qualité
+			if (tmp.FileName.Find('.') > 0)
 			{
+				Index = tmp.FileName.ReverseFind('.');
+				FileExtension = tmp.FileName.Mid(Index + 1);
+				FileExtension = ToUppercaseString(FileExtension);
+				tmp.FileExtension = FileExtension;
+
+				Cond = 0;
 
 				for (i = 0; i < FileExtensionList->size(); i++)
 				{
@@ -2393,11 +2400,9 @@ void CPhotoSortDlg::GetListOfFilesInInputFolder(CString InputPath, std::vector<C
 				pStaticNumberOfFiles->SetWindowTextW(strtmp.GetString());
 				
 			}
-
-			CptFile++;
 		}
-
-
+			
+		CptFile++;
 		percent = (CptFile / (double(TotalNbFiles))) * 100;
 		mpercent.Format(_T("%0.2f%%"), percent);
 		pStaticCtrl->SetWindowTextW(mpercent);
@@ -2416,6 +2421,8 @@ void CPhotoSortDlg::RemoveDuplicateFilesInList()
 	TotalSize = 0;
 	double sizetotal;
 	CString TotalSizeStr;
+	double percent;
+	CString mpercent;
 
 	strtmp = "Step 3/5:REMOVE DUPLICATE FILES FROM LIST";
 	pInformationCtrl->SetWindowTextW(strtmp.GetString());
@@ -2432,8 +2439,12 @@ void CPhotoSortDlg::RemoveDuplicateFilesInList()
 				ListOfFiles->erase(ListOfFiles->begin() + j);
 			}
 		}
-
+		//Sleep(10);
 		m_ProgressCtrl.SetPos(i);
+		percent = (i / (double(ListOfFiles->size()))) * 100;
+		mpercent.Format(_T("%0.2f%%"), percent);
+		pStaticCtrl->SetWindowTextW(mpercent);
+		Refresh();
 	}
 
 	strtmp = "CALCULATE TOTAL SIZE TO PROCESS";
@@ -2444,6 +2455,7 @@ void CPhotoSortDlg::RemoveDuplicateFilesInList()
 		sizetotal = double(TotalSize) / 1e9;
 		TotalSizeStr.Format(_T("%0.02f Gb"), sizetotal);
 		pStaticSizeCtrl->SetWindowTextW(TotalSizeStr.GetString());
+		Refresh();
 	}
 }
 
